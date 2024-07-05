@@ -17,6 +17,7 @@ mut:
     win_height  int = 601
 
     bestiaire   []Unit
+    img_pre     []gg.Image
     index       int
 
     modif       bool
@@ -36,22 +37,21 @@ struct Unit {
 
 fn (unit Unit) render(x f32, y f32, width f32, height f32, mut app App){
     path := "images/" + unit.name + ".png"
-    if os.is_file(os.resource_abs_path(path)){
-        img := app.ctx.create_image(path) or {panic("No image")}
-        app.ctx.draw_image(x, y, width, height, img)
+    if os.is_file(os.resource_abs_path(path)){  
+        app.ctx.draw_image(x, y, width, height, app.img_pre[app.index])
+    }
+    else{
+        print("No image")
     }
 }
 
 fn (unit Unit) description(mut app App){
-    x       := app.win_width/5
-    y       := app.win_height/3
-    width   := 100
-    height  := 100
+    x       := 0
+    y       := 26
+    width   := 250
+    height  := 250
     unit.render(x, y, width, height, mut app)
-    app.text_rect_render(0, 0, true, "Pv:${unit.pv}
-    Mvt:${unit.mvt}
-    Reach:${unit.reach}
-    Dmg:${unit.dmg}", 255)
+    app.text_rect_render(0, y + height, true,"Pv: ${unit.pv} Mvt: ${unit.mvt} Reach: ${unit.reach} Dmg: ${unit.dmg}", 255)
 }
 
 interface Power {
@@ -88,7 +88,15 @@ fn on_init(mut app App){
 	app.win_width 		= size.width
 	app.win_height 		= size.height
 
-    app.bestiaire << Unit{name: 'test'}
+    app.bestiaire << Unit{name: 'test', pv: 4, mvt: 2, reach: 4, dmg: 2}
+    app.bestiaire << Unit{name: 'test2', pv: 5, mvt: 2, reach: 4, dmg: 2}
+
+    for unit in app.bestiaire{
+        path := "images/" + unit.name + ".png"
+        if os.is_file(os.resource_abs_path(path)){  
+            app.img_pre << app.ctx.create_image(path) or {panic("No image")}
+        }
+    }
 }
 
 fn on_frame(mut app App) {
@@ -103,6 +111,9 @@ fn on_frame(mut app App) {
 }
 
 fn on_event(e &gg.Event, mut app App){
+    size := app.ctx.window_size()
+	app.win_width 		= size.width
+	app.win_height 		= size.height
     if e.char_code != 0 && e.char_code < 128 {
 		// app.change += u8(e.char_code).ascii_str()
     }
@@ -116,12 +127,12 @@ fn on_event(e &gg.Event, mut app App){
 
 				}
                 .right{
-                    if app.modif && app.index < app.bestiaire.len{
+                    if !app.modif && app.index < app.bestiaire.len - 1{
                         app.index += 1
                     }
                 }
                 .left{
-                    if app.modif && app.index > 0{
+                    if !app.modif && app.index > 0{
                         app.index -= 1
                     }
                 }
