@@ -16,6 +16,9 @@ mut:
     win_width   int = 601
     win_height  int = 601
 
+    x_mouse     int
+    y_mouse     int
+
     bestiaire   []Unit
     img_pre     []gg.Image
     index       int
@@ -47,20 +50,36 @@ fn (unit Unit) render(x f32, y f32, width f32, height f32, mut app App){
 
 fn (unit Unit) description(mut app App){
     x       := 0
-    y       := 26
+    mut y   := 26
     width   := 250
     height  := 250
     unit.render(x, y, width, height, mut app)
-    app.text_rect_render(0, y + height, true,"Pv: ${unit.pv} Mvt: ${unit.mvt} Reach: ${unit.reach} Dmg: ${unit.dmg}", 255)
+    y += height
+    app.text_rect_render(0, y, true,"Pv: ${unit.pv} Mvt: ${unit.mvt} Reach: ${unit.reach} Dmg: ${unit.dmg}", 255)
+    y += 26
+    app.text_rect_render(0, y, true,"Capa:", 255)
+    y += 26
+    for capa_render in unit.powers{
+        app.text_rect_render(0, y, true, capa_render.name, 255)
+        if app.y_mouse > y &&  app.y_mouse < y + 26{
+            if app.x_mouse > 0 && app.x_mouse < 0 + capa_render.name.len * 8 + 10{
+                capa_render.render_description(app.x_mouse, app.y_mouse, app)
+            }
+        }
+        y += 26
+    }
 }
 
-interface Power {
-    render_description(x f32, y f32, app App)
+struct Power {
+    name        string
     description string
 
     active  bool
 }
 
+fn (power Power) render_description(x f32, y f32, app App){
+    app.text_rect_render(int(x), int(y), true, power.description, 255)
+}
 
 fn main() {
     mut app := &App{}
@@ -88,8 +107,11 @@ fn on_init(mut app App){
 	app.win_width 		= size.width
 	app.win_height 		= size.height
 
-    app.bestiaire << Unit{name: 'test', pv: 4, mvt: 2, reach: 4, dmg: 2}
-    app.bestiaire << Unit{name: 'test2', pv: 5, mvt: 2, reach: 4, dmg: 2}
+    capa := Power{name: "Test", description: " Bla bla bla"}
+    capa2 := Power{name: "Test2", description: " Bla bla bla"}
+
+    app.bestiaire << Unit{name: 'test' , pv: 4, mvt: 2, reach: 4, dmg: 2, powers: [capa]}
+    app.bestiaire << Unit{name: 'test2', pv: 5, mvt: 2, reach: 4, dmg: 2, powers: [capa, capa2]}
 
     for unit in app.bestiaire{
         path := "images/" + unit.name + ".png"
@@ -114,6 +136,9 @@ fn on_event(e &gg.Event, mut app App){
     size := app.ctx.window_size()
 	app.win_width 		= size.width
 	app.win_height 		= size.height
+
+    app.x_mouse, app.y_mouse = int(e.mouse_x), int(e.mouse_y)
+
     if e.char_code != 0 && e.char_code < 128 {
 		// app.change += u8(e.char_code).ascii_str()
     }
