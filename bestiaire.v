@@ -68,9 +68,6 @@ fn on_init(mut app App){
 
     app.powers_load()
     app.units_load()
-
-    dump(app.units_list)
-    dump(app.powers_list)
 }
 
 fn on_frame(mut app App) {

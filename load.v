@@ -8,7 +8,7 @@ fn (mut app App) powers_load(){
 		if os.is_dir(path) {
 			println('dir: $entry')
 		} else {
-			temp_powers := (os.read_file(path) or {panic("No")}).split('\n')
+			temp_powers := (os.read_file(path) or {panic("No temp_powers")}).split('\n')
 
 			name		:= temp_powers[0]
 			description	:= temp_powers[1]
@@ -32,7 +32,7 @@ fn (mut app App) units_load(){
 		if os.is_dir(path) {
 			println('dir: $entry')
 		} else {
-			temp_units := (os.read_file(path)  or {panic("No")}).split('\n')
+			temp_units := (os.read_file(path)  or {panic("No temp_units")}).split('\n')
 
 			name	:= temp_units[0]
 			pv		:= temp_units[1].int()
@@ -40,12 +40,20 @@ fn (mut app App) units_load(){
 			reach	:= temp_units[3].int()
 			dmg		:= temp_units[4].int()
 
-			// TODO Capas temp_units[5]
-			capas_names := temp_units[5].split('\b')
+			// Capas temp_units[5]
 			mut powers	:= []Power{}
-			for capa in capas_names{
-				id := app.powers_ids[capa]
-				powers << app.powers_list[id]
+			if temp_units[5] != ""{
+				capas_names := temp_units[5].split('\b')
+				
+				for capa in capas_names{
+					if capa in app.powers_ids{
+						id := app.powers_ids[capa]
+						powers << app.powers_list[id]
+					}
+					else{
+						panic("No capa with this name")
+					}
+				}
 			}
 
 			app.units_list << Unit{name: name , pv: pv, mvt: mvt, reach: reach, dmg: dmg, powers: powers}
