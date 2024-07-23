@@ -63,9 +63,9 @@ fn on_init(mut app App){
     // capa := Power{name: "Test", description: "Bla bla bla"}
     // capa2 := Power{name: "Test2", description: "Ca ca ca"}
 
-    os.write_file("savs/units/coureur", "coureur\n4\n2\n4\n2\n")  or {panic("No")}
-    os.write_file("savs/units/escaladeur", "escaladeur\n5\n2\n4\n2\n")     or {panic("No")}
-    os.write_file("savs/units/soldat", "soldat\n4\n2\n4\n2\n")  or {panic("No")}
+    os.write_file("savs/units/coureur", "coureur\n4\n6\n3\n2\n")  or {panic("No")}
+    os.write_file("savs/units/escaladeur", "escaladeur\n3\n5\n3\n2\n")     or {panic("No")}
+    os.write_file("savs/units/soldat", "soldat\n2\n2\n6\n2\n")  or {panic("No")}
 
     os.write_file("savs/units/test", "test\n4\n2\n4\n2\ncapa1")  or {panic("No")}
     os.write_file("savs/units/test2", "test2\n5\n2\n4\n2\ncapa1\bcapa2")     or {panic("No")}
