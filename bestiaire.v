@@ -62,7 +62,7 @@ fn on_init(mut app App){
 
     // os.write_file("savs/units/test", "test\n4\n2\n4\n2\ncapa1")  or {panic("No")}
     // os.write_file("savs/units/test2", "test2\n5\n2\n4\n2\ncapa1\bcapa2")     or {panic("No")}
-
+    os.write_file("savs/units/escaladeur", "escaladeur\n3\n5\n3\n2\n")     or {panic("No")}
     // app.units_list << Unit{name: 'test' , pv: 4, mvt: 2, reach: 4, dmg: 2, powers: [capa]}
     // app.units_list << Unit{name: 'test2', pv: 5, mvt: 2, reach: 4, dmg: 2, powers: [capa, capa2]}
 

@@ -16,7 +16,9 @@ fn (unit Unit) render(x f32, y f32, width f32, height f32, mut app App){
 
 fn (unit Unit) description(mut app App){
     x       := 0
-    mut y   := 26
+    mut y   := 0
+    app.text_rect_render(app.win_width/2, y, false,"$unit.name", 255)
+    y += 26
     width   := 250
     height  := 250
     unit.render(x, y, width, height, mut app)
