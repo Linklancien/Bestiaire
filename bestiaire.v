@@ -21,9 +21,13 @@ mut:
 
     powers_list []Power
     powers_ids  map[string]int
+    index_power  int
+    
+    unit_render bool = true
+
     units_list  []Unit
     img_pre     []gg.Image
-    index       int
+    index_unit  int
 
     modif       bool
 }
@@ -62,7 +66,7 @@ fn on_init(mut app App){
 
     // os.write_file("savs/units/test", "test\n4\n2\n4\n2\ncapa1")  or {panic("No")}
     // os.write_file("savs/units/test2", "test2\n5\n2\n4\n2\ncapa1\bcapa2")     or {panic("No")}
-    os.write_file("savs/units/escaladeur", "escaladeur\n3\n5\n3\n2\n")     or {panic("No")}
+
     // app.units_list << Unit{name: 'test' , pv: 4, mvt: 2, reach: 4, dmg: 2, powers: [capa]}
     // app.units_list << Unit{name: 'test2', pv: 5, mvt: 2, reach: 4, dmg: 2, powers: [capa, capa2]}
 
@@ -73,11 +77,21 @@ fn on_init(mut app App){
 fn on_frame(mut app App) {
     //Draw
     app.ctx.begin()
-    if app.index < app.units_list.len{
-        app.units_list[app.index].description(mut app)
+    
+    mut index := -1
+    if app.unit_render == true{
+        index = app.index_unit
+        if app.index_unit < app.units_list.len{
+            app.units_list[app.index_unit].description(mut app)
+        }
     }
-    app.text_rect_render(0, 0, true, "Ind:${app.index}", 255)
-    // app.ctx.draw_circle_filled(x_autre, y_autre, 2, gg.Color{255, 0, 0, 255})
+    else{
+        index = app.index_power
+        if app.index_power < app.powers_list.len{
+            app.powers_list[app.index_power].description(mut app)
+        }
+    }
+    app.text_rect_render(0, 0, true, "Ind:${index}", 255)
     app.ctx.end()
 }
 
@@ -101,13 +115,28 @@ fn on_event(e &gg.Event, mut app App){
 
 				}
                 .right{
-                    if !app.modif && app.index < app.units_list.len - 1{
-                        app.index += 1
+                    if !app.modif {
+                        if app.unit_render && app.index_unit < app.units_list.len - 1{
+                            app.index_unit += 1
+                        }
+                        else if app.index_power < app.powers_list.len - 1{
+                            app.index_power += 1
+                        }
                     }
                 }
                 .left{
-                    if !app.modif && app.index > 0{
-                        app.index -= 1
+                    if !app.modif {
+                        if app.unit_render && app.index_unit > 0{
+                            app.index_unit -= 1
+                        }
+                        else if app.index_power > 0{
+                            app.index_power -= 1
+                        }
+                    }
+                }
+                .up{
+                    if !app.modif {
+                        app.unit_render = !app.unit_render
                     }
                 }
                 else {}

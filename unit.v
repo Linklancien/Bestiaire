@@ -11,7 +11,7 @@ struct Unit {
 }
 
 fn (unit Unit) render(x f32, y f32, width f32, height f32, mut app App){
-    app.ctx.draw_image(x, y, width, height, app.img_pre[app.index])
+    app.ctx.draw_image(x, y, width, height, app.img_pre[app.index_unit])
 }
 
 fn (unit Unit) description(mut app App){
@@ -23,9 +23,9 @@ fn (unit Unit) description(mut app App){
     height  := 250
     unit.render(x, y, width, height, mut app)
     y += height
-    app.text_rect_render(0, y, true,"Pv: ${unit.pv} Mvt: ${unit.mvt} Reach: ${unit.reach} Dmg: ${unit.dmg}", 255)
+    app.text_rect_render(x, y, true,"Pv: ${unit.pv} Mvt: ${unit.mvt} Reach: ${unit.reach} Dmg: ${unit.dmg}", 255)
     y += 26
-    app.text_rect_render(0, y, true,"Capa:", 255)
+    app.text_rect_render(x, y, true,"Capa:", 255)
     y += 26
     mut capa_description := ""
     for capa_render in unit.powers{
