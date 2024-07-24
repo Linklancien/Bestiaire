@@ -49,6 +49,6 @@ fn (unit Unit) description(mut app App){
         y += 26
     }
     if capa_description != ""{
-        app.text_rect_render(int(app.x_mouse), int(app.y_mouse), true, capa_description, 255)
+        app.text_rect_render(int(app.x_mouse + 16), int(app.y_mouse), true, capa_description, 255)
     }
 }

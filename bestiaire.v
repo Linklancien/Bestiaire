@@ -99,9 +99,6 @@ fn on_frame(mut app App) {
                             app.clique      = false
                             app.index_unit  = id
                             app.global_view = false
-                            dump(app.y_mouse)
-                            dump(app.x_mouse)
-                            dump(id)
                         }
                     }
                 }
@@ -120,7 +117,32 @@ fn on_frame(mut app App) {
             }
         }
         else{
+            x := 0
+            mut y := 0
+            mut id := 0
+            mut capa_description := ""
 
+            for power in app.powers_list{
+                power.previsulation(x, y, mut app)
+
+                if app.y_mouse > y &&  app.y_mouse < y + 26{
+                    if app.x_mouse > 0 && app.x_mouse < 0 + power.name.len * 8 + 10{
+                        if app.clique{
+                            app.clique      = false
+                            app.index_power = id
+                            app.global_view = false
+                        }
+                        capa_description = power.description
+                    }
+                }
+
+                y += 26
+                id += 1
+            }
+
+            if capa_description != ""{
+                app.text_rect_render(int(app.x_mouse + 16), int(app.y_mouse), true, capa_description, 255)
+            }
         }
     }
     else{
