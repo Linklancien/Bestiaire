@@ -22,7 +22,8 @@ mut:
     powers_ids  map[string]int
     index_power  int
     
-    unit_render bool = true
+    unit_view   bool = true
+    global_view bool = true
 
     units_list  []Unit
     img_pre     []gg.Image
@@ -57,45 +58,63 @@ fn on_init(mut app App){
 	app.win_width 		= size.width
 	app.win_height 		= size.height
 
+    app.powers_load()
+    app.units_load()
+}
+
+fn resave(){
+    // Capas
     os.write_file("savs/powers/capa1", "capa1\nBla bla bla\ntrue")   or {panic("No")}
     os.write_file("savs/powers/capa2", "capa2\nCa ca ca\ntrue")  or {panic("No")}
 
-    // capa := Power{name: "Test", description: "Bla bla bla"}
-    // capa2 := Power{name: "Test2", description: "Ca ca ca"}
-
+    // Units
     os.write_file("savs/units/coureur", "coureur\n4\n6\n3\n2\n")  or {panic("No")}
     os.write_file("savs/units/escaladeur", "escaladeur\n3\n5\n3\n2\n")     or {panic("No")}
     os.write_file("savs/units/soldat", "soldat\n2\n2\n6\n2\n")  or {panic("No")}
 
+    // Testes
     os.write_file("savs/units/test", "test\n4\n2\n4\n2\ncapa1")  or {panic("No")}
     os.write_file("savs/units/test2", "test2\n5\n2\n4\n2\ncapa1\bcapa2")     or {panic("No")}
     os.write_file("savs/units/test3", "test3\n1\n2\n10\n2\n")     or {panic("No")}
-
-    // app.units_list << Unit{name: 'test' , pv: 4, mvt: 2, reach: 4, dmg: 2, powers: [capa]}
-    // app.units_list << Unit{name: 'test2', pv: 5, mvt: 2, reach: 4, dmg: 2, powers: [capa, capa2]}
-
-    app.powers_load()
-    app.units_load()
 }
 
 fn on_frame(mut app App) {
     //Draw
     app.ctx.begin()
     
-    mut index := -1
-    if app.unit_render == true{
-        index = app.index_unit
-        if app.index_unit < app.units_list.len{
-            app.units_list[app.index_unit].description(mut app)
+    if app.global_view{
+        if app.unit_view{
+            mut x   := 0
+            mut y   := 0
+            width   := app.win_width/3
+            height  := app.win_height/3
+            for unit in app.units_list{
+                unit.previsulation(x, y, width, height, mut app)
+                if x < app.win_width*2/3{
+                    x += width
+                }
+                else{
+                    x = 0
+                    y += height
+                }
+            }
+        }
+        else{
+
         }
     }
     else{
-        index = app.index_power
-        if app.index_power < app.powers_list.len{
+        mut index := -1
+        if app.unit_view{
+            index = app.index_unit
+            app.units_list[app.index_unit].description(mut app)
+        }
+        else{
+            index = app.index_power
             app.powers_list[app.index_power].description(mut app)
         }
+        app.text_rect_render(0, 0, true, "Ind:${index}", 255)
     }
-    app.text_rect_render(0, 0, true, "Ind:${index}", 255)
     app.ctx.end()
 }
 
@@ -119,8 +138,8 @@ fn on_event(e &gg.Event, mut app App){
 
 				}
                 .right{
-                    if !app.modif {
-                        if app.unit_render && app.index_unit < app.units_list.len - 1{
+                    if !app.modif && !app.global_view {
+                        if app.unit_view && app.index_unit < app.units_list.len - 1{
                             app.index_unit += 1
                         }
                         else if app.index_power < app.powers_list.len - 1{
@@ -129,8 +148,8 @@ fn on_event(e &gg.Event, mut app App){
                     }
                 }
                 .left{
-                    if !app.modif {
-                        if app.unit_render && app.index_unit > 0{
+                    if !app.modif && !app.global_view {
+                        if app.unit_view && app.index_unit > 0{
                             app.index_unit -= 1
                         }
                         else if app.index_power > 0{
@@ -140,7 +159,12 @@ fn on_event(e &gg.Event, mut app App){
                 }
                 .up{
                     if !app.modif {
-                        app.unit_render = !app.unit_render
+                        app.unit_view = !app.unit_view
+                    }
+                }
+                .down{
+                    if !app.modif {
+                        app.global_view = !app.global_view
                     }
                 }
                 else {}

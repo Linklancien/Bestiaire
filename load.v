@@ -55,8 +55,7 @@ fn (mut app App) units_load(){
 					}
 				}
 			}
-
-			app.units_list << Unit{name: name , pv: pv, mvt: mvt, reach: reach, dmg: dmg, powers: powers}
+			app.units_list << Unit{index_unit: app.units_list.len, name: name , pv: pv, mvt: mvt, reach: reach, dmg: dmg, powers: powers}
 		}
 	}
 

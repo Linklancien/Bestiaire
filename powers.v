@@ -5,6 +5,10 @@ struct Power {
     active  bool
 }
 
+fn (power Power) previsulation(x f32, y f32, mut app App){
+    app.text_rect_render(int(x), int(y), false,"$power.name", 255)
+}
+
 fn (power Power) description(mut app App){
     x       := 0
     mut y   := 0

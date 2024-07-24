@@ -1,4 +1,5 @@
 struct Unit {
+    index_unit  int
     mut:
         pv      int
         mvt     int
@@ -11,7 +12,13 @@ struct Unit {
 }
 
 fn (unit Unit) render(x f32, y f32, width f32, height f32, mut app App){
-    app.ctx.draw_image(x, y, width, height, app.img_pre[app.index_unit])
+    app.ctx.draw_image(x, y, width, height, app.img_pre[unit.index_unit])
+}
+
+fn (unit Unit) previsulation(x f32, y f32, w f32, h f32, mut app App){
+    unit.render(x, y, w, h, mut app)
+    app.text_rect_render(int(x), int(y), true,"$unit.name", 255)
+    app.ctx.draw_rect_empty(x, y, w, h, bg_color)
 }
 
 fn (unit Unit) description(mut app App){
