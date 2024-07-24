@@ -30,6 +30,7 @@ mut:
     index_unit  int
 
     modif       bool
+    clique      bool
 }
 
 fn main() {
@@ -88,14 +89,34 @@ fn on_frame(mut app App) {
             mut y   := 0
             width   := app.win_width/3
             height  := app.win_height/3
-            for unit in app.units_list{
+
+            mut id := 0
+            for unit in app.units_list[id..]{
                 unit.previsulation(x, y, width, height, mut app)
+
+                if app.clique{
+                    if app.y_mouse > y &&  app.y_mouse < y + height{
+                        if app.x_mouse > x && app.x_mouse < x + width{
+                            app.clique      = false
+                            app.index_unit  = id
+                            app.global_view = false
+                            dump(app.y_mouse)
+                            dump(app.x_mouse)
+                            dump(id)
+                        }
+                    }
+                }
+
+                id += 1
                 if x < app.win_width*2/3{
                     x += width
                 }
-                else{
+                else if y < app.win_height*2/3{
                     x = 0
                     y += height
+                }
+                else{
+                    break
                 }
             }
         }
@@ -132,7 +153,9 @@ fn on_event(e &gg.Event, mut app App){
         .key_down {
             match e.key_code {
                 .escape {
-                    
+                    if !app.modif {
+                        app.global_view = !app.global_view
+                    }
                 }
                 .backspace {
 
@@ -157,17 +180,20 @@ fn on_event(e &gg.Event, mut app App){
                         }
                     }
                 }
-                .up{
+                .space{
                     if !app.modif {
                         app.unit_view = !app.unit_view
                     }
                 }
-                .down{
-                    if !app.modif {
-                        app.global_view = !app.global_view
-                    }
-                }
                 else {}
+            }
+        }
+        .mouse_down{
+            match e.mouse_button{
+                .left{
+                    app.clique = true
+                }
+                else{}
             }
         }
         else {}
