@@ -6,7 +6,6 @@ const bg_color      = gg.Color{}
 const font_path     = os.resource_abs_path('0xProtoNerdFontMono-Regular.ttf')
 
 
-
 struct App {
 mut:
     ctx    &gg.Context = unsafe { nil }
@@ -136,6 +135,8 @@ fn on_frame(mut app App) {
         }
         app.text_rect_render(0, 0, true, "Ind:${index}", 255)
     }
+
+    app.clique      = false
     app.ctx.end()
 }
 

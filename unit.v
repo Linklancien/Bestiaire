@@ -26,14 +26,18 @@ fn (unit Unit) description(mut app App){
     mut y   := 0
     app.text_rect_render(app.win_width/2, y, false,"$unit.name", 255)
     y += 26
+
     width   := 250
     height  := 250
     unit.render(x, y, width, height, mut app)
     y += height
+
     app.text_rect_render(x, y, true,"Pv: ${unit.pv} Mvt: ${unit.mvt} Reach: ${unit.reach} Dmg: ${unit.dmg}", 255)
     y += 26
+
     app.text_rect_render(x, y, true,"Capa:", 255)
     y += 26
+
     mut capa_description := ""
     for capa_render in unit.powers{
         app.text_rect_render(0, y, true, capa_render.name, 255)
