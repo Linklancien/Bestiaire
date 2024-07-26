@@ -1,4 +1,5 @@
 import os
+import json
 
 fn (mut app App) powers_load(){
 	entries := os.ls(os.join_path("savs", "powers")) or { [] }
@@ -8,17 +9,9 @@ fn (mut app App) powers_load(){
 		if os.is_dir(path) {
 			println('dir: $entry')
 		} else {
-			temp_powers := (os.read_file(path) or {panic("No temp_powers")}).split('\n')
+			temp_powers := (os.read_file(path) or {panic("No temp_powers to load")})
 
-			name		:= temp_powers[0]
-			description	:= temp_powers[1]
-			mut active		:= false
-			if temp_powers[2] == "true"{
-				active = true
-			}
-
-			app.powers_ids[temp_powers[0]] = app.powers_list.len
-			app.powers_list << Power{name: name, description: description, active:  active}
+			app.powers_list << json.decode(Power, temp_powers) or {panic('Failed to decode json, error: ${err}')}
 		}
 	}
 }
@@ -32,30 +25,10 @@ fn (mut app App) units_load(){
 		if os.is_dir(path) {
 			println('dir: $entry')
 		} else {
-			temp_units := (os.read_file(path)  or {panic("No temp_units")}).split('\n')
+			temp_units := (os.read_file(path)  or {panic("No temp_units to load")})
 
-			name	:= temp_units[0]
-			pv		:= temp_units[1].int()
-			mvt		:= temp_units[2].int()
-			reach	:= temp_units[3].int()
-			dmg		:= temp_units[4].int()
-
-			// Capas temp_units[5]
-			mut powers	:= []Power{}
-			if temp_units[5] != ""{
-				capas_names := temp_units[5].split('\b')
-				
-				for capa in capas_names{
-					if capa in app.powers_ids{
-						id := app.powers_ids[capa]
-						powers << app.powers_list[id]
-					}
-					else{
-						panic("No capa with this name")
-					}
-				}
-			}
-			app.units_list << Unit{index_unit: app.units_list.len, name: name , pv: pv, mvt: mvt, reach: reach, dmg: dmg, powers: powers}
+			app.units_list << json.decode(Unit, temp_units) or {panic('Failed to decode json, error: ${err}')}
+			app.units_list[app.units_list.len - 1].index_unit = app.units_list.len - 1
 		}
 	}
 

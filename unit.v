@@ -1,6 +1,6 @@
 struct Unit {
-    index_unit  int @[skip]
     mut:
+        index_unit  int @[skip]
         pv      int @[required]
         mvt     int @[required]
         reach   int @[required]
@@ -8,7 +8,7 @@ struct Unit {
 
         name    string  @[required]
 
-        powers  []Power @[required]
+        powers  []Power 
 }
 
 fn (unit Unit) render(x f32, y f32, width f32, height f32, mut app App){

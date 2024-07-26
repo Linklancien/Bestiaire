@@ -1,6 +1,7 @@
 import gg
 import gx
 import os
+import json
 
 const bg_color      = gg.Color{}
 const font_path     = os.resource_abs_path('0xProtoNerdFontMono-Regular.ttf')
@@ -58,26 +59,40 @@ fn on_init(mut app App){
 	app.win_width 		= size.width
 	app.win_height 		= size.height
 
+    // resave()
+
     app.powers_load()
     app.units_load()
 }
 
 fn resave(){
-    mut temp := Power{}
     // Capas
-    temp = Power{}
-    os.write_file("savs/powers/capa1", "capa1\nBla bla bla\ntrue")   or {panic("No")}
-    os.write_file("savs/powers/capa2", "capa2\nCa ca ca\ntrue")  or {panic("No")}
+    mut temp_powers1 := Power{name: "capa1", description: "Ceci est le test de capa 1", active: true}
+    os.write_file("savs/powers/capa1.json", json.encode(temp_powers1))   or {panic("No")}
+
+    mut temp_powers2 := Power{name: "capa2", description: "Bah la ducoup c'est le test 2", active: true}
+    os.write_file("savs/powers/capa2.json", json.encode(temp_powers2))  or {panic("No")}
+
 
     // Units
-    os.write_file("savs/units/coureur", "coureur\n4\n6\n3\n2\n")  or {panic("No")}
-    os.write_file("savs/units/escaladeur", "escaladeur\n3\n5\n3\n2\n")     or {panic("No")}
-    os.write_file("savs/units/soldat", "soldat\n2\n2\n6\n2\n")  or {panic("No")}
+    mut temp_units := Unit{name: "coureur" , pv: 4, mvt: 6, reach: 3, dmg: 2}
+    os.write_file("savs/units/coureur.json", json.encode(temp_units))  or {panic("No")}
+
+    temp_units = Unit{name: "escaladeur" , pv: 3, mvt: 5, reach: 3, dmg: 2}
+    os.write_file("savs/units/escaladeur.json", json.encode(temp_units))     or {panic("No")}
+
+    temp_units = Unit{name: "soldat" , pv: 2, mvt: 2, reach: 6, dmg: 2}
+    os.write_file("savs/units/soldat.json", json.encode(temp_units))  or {panic("No")}
 
     // Testes
-    os.write_file("savs/units/test", "test\n4\n2\n4\n2\ncapa1")  or {panic("No")}
-    os.write_file("savs/units/test2", "test2\n5\n2\n4\n2\ncapa1\bcapa2")     or {panic("No")}
-    os.write_file("savs/units/test3", "test3\n1\n2\n10\n2\n")     or {panic("No")}
+    temp_units = Unit{name: "test" , pv: 4, mvt: 2, reach: 4, dmg: 1, powers: [temp_powers1]}
+    os.write_file("savs/units/test.json", json.encode(temp_units))  or {panic("No")}
+
+    temp_units = Unit{name: "test2" , pv: 5, mvt: 3, reach: 4, dmg: 2, powers: [temp_powers1, temp_powers2]}
+    os.write_file("savs/units/test2.json", json.encode(temp_units))     or {panic("No")}
+
+    temp_units = Unit{name: "test3" , pv: 1, mvt: 3, reach: 6, dmg: 3, powers: [temp_powers2]}
+    os.write_file("savs/units/test3.json", json.encode(temp_units))     or {panic("No")}
 }
 
 fn on_frame(mut app App) {
