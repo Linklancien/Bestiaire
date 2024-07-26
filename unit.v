@@ -1,14 +1,14 @@
 struct Unit {
-    index_unit  int
+    index_unit  int @[skip]
     mut:
-        pv      int
-        mvt     int
-        reach   int
-        dmg     int
+        pv      int @[required]
+        mvt     int @[required]
+        reach   int @[required]
+        dmg     int @[required]
 
-        name    string
+        name    string  @[required]
 
-        powers  []Power
+        powers  []Power @[required]
 }
 
 fn (unit Unit) render(x f32, y f32, width f32, height f32, mut app App){

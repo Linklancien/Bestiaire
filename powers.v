@@ -1,8 +1,8 @@
 struct Power {
-    name        string
-    description string
+    name        string  @[required]
+    description string  @[required]
 	
-    active  bool
+    active      bool    @[skip]
 }
 
 fn (power Power) previsulation(x f32, y f32, mut app App){

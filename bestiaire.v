@@ -63,7 +63,9 @@ fn on_init(mut app App){
 }
 
 fn resave(){
+    mut temp := Power{}
     // Capas
+    temp = Power{}
     os.write_file("savs/powers/capa1", "capa1\nBla bla bla\ntrue")   or {panic("No")}
     os.write_file("savs/powers/capa2", "capa2\nCa ca ca\ntrue")  or {panic("No")}
 
