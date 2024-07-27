@@ -1,1 +1,1 @@
-{"pv":5,"mvt":3,"reach":4,"dmg":2,"name":"test2","powers":[{"name":"capa1","description":"Ceci est le test de capa 1"},{"name":"capa2","description":"Bah la ducoup c'est le test 2"}]}
+{"pv":5,"mvt":3,"reach":4,"dmg":2,"name":"test2","powers":[{"name":"capa1","description":"Ceci est le test de capa 1"},{"name":"capa2","description":"Bah la ducoup c'est le test 2\nAvec le test du retour a la ligne\nVoila"}]}

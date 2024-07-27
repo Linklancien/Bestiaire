@@ -24,7 +24,7 @@ fn (unit Unit) previsulation(x f32, y f32, w f32, h f32, mut app App){
 fn (unit Unit) description(mut app App){
     x       := 0
     mut y   := 0
-    app.text_rect_render(app.win_width/2, y, false,"$unit.name", 255)
+    app.text_rect_render(app.win_width/2, y, true,"$unit.name", 255)
     y += 26
 
     width   := 250

@@ -59,7 +59,7 @@ fn on_init(mut app App){
 	app.win_width 		= size.width
 	app.win_height 		= size.height
 
-    // resave()
+    resave()
 
     app.powers_load()
     app.units_load()
@@ -70,7 +70,7 @@ fn resave(){
     mut temp_powers1 := Power{name: "capa1", description: "Ceci est le test de capa 1", active: true}
     os.write_file("savs/powers/capa1.json", json.encode(temp_powers1))   or {panic("No")}
 
-    mut temp_powers2 := Power{name: "capa2", description: "Bah la ducoup c'est le test 2", active: true}
+    mut temp_powers2 := Power{name: "capa2", description: "Bah la ducoup c'est le test 2\nAvec le test du retour a la ligne\nVoila", active: true}
     os.write_file("savs/powers/capa2.json", json.encode(temp_powers2))  or {panic("No")}
 
 
@@ -149,16 +149,11 @@ fn on_frame(mut app App) {
                             app.index_power = id
                             app.global_view = false
                         }
-                        capa_description = power.description
                     }
                 }
 
                 y += 26
                 id += 1
-            }
-
-            if capa_description != ""{
-                app.text_rect_render(int(app.x_mouse + 16), int(app.y_mouse), true, capa_description, 255)
             }
         }
     }
@@ -240,15 +235,35 @@ fn on_event(e &gg.Event, mut app App){
     }
 }
 
-fn (app App) text_rect_render(x int, y int, corner bool, text string, transparence u8){
-	lenght  := text.len * 8 + 10
-	mut new_x   := x
-	new_y       := y
-    if corner == false{
-        new_x -= lenght/2
+fn (app App) text_rect_render(x int, y int, corner bool, text_brut string, transparence u8){
+    text_split := text_brut.split('\n')
+
+    mut text_len    := []int{cap: text_split.len}
+    mut max_len     := 0
+
+    // Precalcul
+    for text in text_split{
+        lenght  := text.len * 8 + 10
+        text_len << lenght
+
+        if lenght > max_len{
+            max_len = lenght
+        }
     }
-	app.ctx.draw_rounded_rect_filled(new_x, new_y, lenght, app.text_cfg.size + 10, 5, attenuation(gx.gray, transparence))
-	app.ctx.draw_text(new_x + 5, new_y + 5, text, app.text_cfg)
+
+    // affichage
+    mut new_x   := x
+    if corner == false{
+        dump(new_x)
+        new_x -= max_len/2
+        dump(new_x)
+    }
+
+    app.ctx.draw_rounded_rect_filled(new_x, y, max_len, app.text_cfg.size*text_split.len + 10, 5, attenuation(gx.gray, transparence))
+    for id, text in text_split{
+        new_y   := y + app.text_cfg.size * id
+        app.ctx.draw_text(new_x + 5, new_y + 5, text, app.text_cfg)
+    }
 }
 
 fn attenuation (color gx.Color, new_a u8) gx.Color{
