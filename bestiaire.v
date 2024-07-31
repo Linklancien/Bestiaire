@@ -137,7 +137,6 @@ fn on_frame(mut app App) {
             x := 0
             mut y := 0
             mut id := 0
-            mut capa_description := ""
 
             for power in app.powers_list{
                 power.previsulation(x, y, mut app)
@@ -254,9 +253,7 @@ fn (app App) text_rect_render(x int, y int, corner bool, text_brut string, trans
     // affichage
     mut new_x   := x
     if corner == false{
-        dump(new_x)
         new_x -= max_len/2
-        dump(new_x)
     }
 
     app.ctx.draw_rounded_rect_filled(new_x, y, max_len, app.text_cfg.size*text_split.len + 10, 5, attenuation(gx.gray, transparence))
