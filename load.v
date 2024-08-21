@@ -11,7 +11,7 @@ fn (mut app App) powers_load(){
 		} else {
 			temp_powers := (os.read_file(path) or {panic("No temp_powers to load")})
 
-			app.powers_list << json.decode(Power, temp_powers) or {panic('Failed to decode json, error: ${err}')}
+			app.powers_list << json.decode(Power_Description, temp_powers) or {panic('Failed to decode json, error: ${err}')}
 		}
 	}
 }

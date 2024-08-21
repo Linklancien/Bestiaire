@@ -1,15 +1,15 @@
-struct Power {
+struct Power_Description {
     name        string  @[required]
     description string  @[required]
 	
     active      bool    @[skip]
 }
 
-fn (power Power) previsulation(x f32, y f32, mut app App){
+fn (power Power_Description) previsulation(x f32, y f32, mut app App){
     app.text_rect_render(int(x), int(y), true,"$power.name", 255)
 }
 
-fn (power Power) description(mut app App){
+fn (power Power_Description) description(mut app App){
     x       := 0
     mut y   := 0
 

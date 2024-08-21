@@ -8,7 +8,7 @@ struct Unit {
 
         name    string  @[required]
 
-        powers  []Power 
+        powers  []Power_Description 
 }
 
 fn (unit Unit) render(x f32, y f32, width f32, height f32, mut app App){

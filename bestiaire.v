@@ -18,7 +18,7 @@ mut:
     x_mouse     int
     y_mouse     int
 
-    powers_list []Power
+    powers_list []Power_Description
     powers_ids  map[string]int
     index_power  int
     
@@ -67,10 +67,10 @@ fn on_init(mut app App){
 
 fn resave(){
     // Capas
-    mut temp_powers1 := Power{name: "capa1", description: "Ceci est le test de capa 1", active: true}
+    mut temp_powers1 := Power_Description{name: "capa1", description: "Ceci est le test de capa 1", active: true}
     os.write_file("savs/powers/capa1.json", json.encode(temp_powers1))   or {panic("No")}
 
-    mut temp_powers2 := Power{name: "capa2", description: "Bah la ducoup c'est le test 2\nAvec le test du retour a la ligne\nVoila", active: true}
+    mut temp_powers2 := Power_Description{name: "capa2", description: "Bah la ducoup c'est le test 2\nAvec le test du retour a la ligne\nVoila", active: true}
     os.write_file("savs/powers/capa2.json", json.encode(temp_powers2))  or {panic("No")}
 
 
