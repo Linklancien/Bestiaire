@@ -13,7 +13,7 @@ fn (mut app App) powers_load(){
 
 			app.powers_list << json.decode(Power_Description, temp_powers) or {panic('Failed to decode json, error: ${err}')}
 		}
-	}
+	} 
 }
 
 fn (mut app App) units_load(){
